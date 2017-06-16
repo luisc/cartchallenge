@@ -1,6 +1,18 @@
 #!/usr/bin/env ruby
 
-gem 'factory_girl'
-gem 'rspec-core'
+require './lib/file_loader'
+include FileLoader
+require_all('/../models/*.rb')
 
-puts "hello"
+# # specify globs of files to include
+# globs = [
+#   '/models/*.rb',
+#   '/lib/*.rb'
+# ]
+
+# require each of those files
+# selectors.each do |selector|
+#   Dir[File.dirname(__FILE__) + selector].each {|file| require file }
+# end
+
+puts Order.new
