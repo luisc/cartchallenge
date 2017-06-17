@@ -2,6 +2,7 @@ FactoryGirl.define do
   
   factory :item do
     sequence(:name) { |i| "item_#{i}" }
+    sequence(:id) { |i| i }
   end
   
   factory :customer do

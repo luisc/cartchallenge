@@ -4,11 +4,23 @@ class Order
   attr_accessor :customer
   
   def initialize
-    self.line_items = []
+    self.line_items = {}
   end
   
   def add_line_item(item)
-    self.line_items << item
+    
+    if self.line_items[item.id]
+      self.line_items[item.id].quantity += 1
+    else
+      li = LineItem.new
+      li.item = item
+      li.price = item.price
+      li.quantity = 1
+      li.order = self
+      
+      self.line_items[item.id] = li
+    end
+    
   end
   
   def total
