@@ -1,4 +1,5 @@
 require 'factory_girl'
+require 'bigdecimal'
 require './lib/file_loader'
 include FileLoader
 require_all('**/*.rb', '/../models/*.rb')

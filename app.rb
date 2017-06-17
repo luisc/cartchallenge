@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'bigdecimal'
 require './lib/file_loader'
 include FileLoader
 require_all('/../models/*.rb')
