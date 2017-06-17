@@ -47,7 +47,7 @@ class Order
   
   def total_adjustments
     self.adjustments.inject(0) do |result, adjustment|
-      result + adjustment.amount
+      result + adjustment.subtotal
     end
   end
   

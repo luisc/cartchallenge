@@ -2,16 +2,16 @@ class Promotion
   
   attr_accessor :amount
   attr_accessor :description
-  attr_accessor :triggers
+  attr_accessor :qualifiers
   attr_accessor :line_items
   attr_accessor :results
   
   def initialize
-    self.triggers = []
+    self.qualifiers = []
   end
   
-  def add_trigger(item, quantity)
-    self.triggers << { item: item, quanity: quantity }
+  def add_qualifier(item, quantity)
+    self.qualifiers << { item: item, quanity: quantity }
   end
   
   def add_line_items(line_items)

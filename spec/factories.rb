@@ -10,6 +10,8 @@ FactoryGirl.define do
     sequence(:label) { |i| "label_#{i}" }
     amount BigDecimal("5")
     quantity 1
+    
+    association :item, strategy: :build
   end
   
   factory :customer do
@@ -35,8 +37,7 @@ FactoryGirl.define do
         end
         
         after(:build) do |order, evaluator|
-          order.adjustments << { description: 'Something Cool', amount: BigDecimal("5") }
-          order.adjustments << { description: 'Adjustment Again', amount: BigDecimal("5") }
+          order.adjustments = build_list(:adjustment, evaluator.adjustments_count)
         end
       end
     end
