@@ -5,7 +5,7 @@ RSpec.describe Order do
   it "sums the prices of its line items" do
     order = build(:order_with_line_items)
     
-    expect(order.total).to eq(BigDecimal.new('30'))
+    expect(order.total_line_items).to eq(BigDecimal.new('100'))
   end
   
   it "counts the different line items" do
@@ -18,6 +18,24 @@ RSpec.describe Order do
     order = build(:order_with_line_items)
     
     expect(order.count_all_line_items).to eq(10)
+  end
+  
+  it "counts the different promotions" do
+    order = build(:order_with_line_items_and_promotions)
+    
+    expect(order.count_promotions).to eq(2)
+  end
+  
+  it "sums the prices of its promotions" do
+    order = build(:order_with_line_items_and_promotions)
+    
+    expect(order.total_promotions).to eq(BigDecimal.new('10'))
+  end
+  
+  it "gets the difference between its line items and promotions" do
+    order = build(:order_with_line_items_and_promotions)
+    
+    expect(order.total).to eq(BigDecimal.new('90'))
   end
   
 end
