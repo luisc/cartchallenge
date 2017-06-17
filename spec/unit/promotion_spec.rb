@@ -12,16 +12,7 @@ RSpec.describe Promotion do
     
     expect(promotion.qualifiers.length).to eq(2)
   end
-  
-  it "can add line items" do
-    order = build(:order_with_line_items)
     
-    promotion = Promotion.new
-    promotion.add_line_items(order.line_items)
-    
-    expect(order.line_items.length).to be > 0
-  end
-  
   it "can add one adjustment at a time" do
     
     adjustment_1 = build(:adjustment)
@@ -42,6 +33,19 @@ RSpec.describe Promotion do
     order.add_adjustments(adjustments)
     
     expect(order.adjustments.size).to eq(adjustments.size)
+  end
+  
+  it "can add promotions one at a time" do
+    
+    promotion_1 = build(:promotion)
+    promotion_2 = build(:promotion)
+    
+    order = build(:order)
+    
+    order.add_promotion(promotion_1)
+    order.add_promotion(promotion_2)
+    
+    expect(order.promotions.size).to eq(2)
   end
   
 end

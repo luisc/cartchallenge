@@ -10,8 +10,6 @@ FactoryGirl.define do
     sequence(:label) { |i| "label_#{i}" }
     amount BigDecimal("5")
     quantity 1
-    
-    association :item, strategy: :build
   end
   
   factory :customer do
@@ -40,6 +38,18 @@ FactoryGirl.define do
           order.adjustments = build_list(:adjustment, evaluator.adjustments_count)
         end
       end
+      
+      factory :order_with_line_items_and_promotions do
+        
+        transient do
+          promotions_count = 2
+          
+          after(:build) do |order, evaluator|
+            order.promotions = build_list(:promotion, evaluator.promotions_count)
+          end
+        end
+      end
+      
     end
   end
   
@@ -54,9 +64,20 @@ FactoryGirl.define do
   end
   
   factory :promotion do
-    association :order, strategy: :build
-    sequence(:name) { |i| "promotion_#{i}" }
-    amount BigDecimal("5")
+    
+    factory :promotion_with_qualifiers do
+      
+      transient do
+        qualifers_count = 2
+      end
+      
+      after(:build) do |promotion, evaluator|
+        promotion.qualifiers = build_list(:qualifier, evaluator.qualifiers_count)
+      end
+      
+    end
+    
+    
   end
   
 end

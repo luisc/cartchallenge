@@ -8,7 +8,7 @@ class Order
   def initialize
     self.line_items = {}
     self.adjustments = []
-    # self.promotions = Promotion.all
+    self.promotions = []
   end
   
   def add_line_item(item)
@@ -33,6 +33,10 @@ class Order
   
   def add_adjustments(adjustments)
     self.adjustments = adjustments
+  end
+  
+  def add_promotion(promotion)
+    self.promotions << promotion
   end
   
   def total
