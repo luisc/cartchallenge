@@ -2,11 +2,13 @@ class Order
   
   attr_accessor :line_items
   attr_accessor :customer
+  attr_accessor :adjustments
   attr_accessor :promotions
   
   def initialize
     self.line_items = {}
-    self.promotions = []
+    self.adjustments = []
+    # self.promotions = Promotion.all
   end
   
   def add_line_item(item)
@@ -26,7 +28,7 @@ class Order
   end
   
   def total
-    total_line_items - total_promotions
+    total_line_items - total_adjustments
   end
   
   def total_line_items
@@ -35,14 +37,14 @@ class Order
     end
   end
   
-  def total_promotions
-    self.promotions.inject(0) do |result, promotion|
-      result + promotion.amount
+  def total_adjustments
+    self.adjustments.inject(0) do |result, adjustment|
+      result + adjustment[:amount]
     end
   end
   
-  def count_promotions
-    promotions.length
+  def count_adjustments
+    adjustments.length
   end
   
   def count_line_items

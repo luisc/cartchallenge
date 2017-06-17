@@ -21,19 +21,19 @@ RSpec.describe Order do
   end
   
   it "counts the different promotions" do
-    order = build(:order_with_line_items_and_promotions)
+    order = build(:order_with_line_items_and_adjustments)
     
-    expect(order.count_promotions).to eq(2)
+    expect(order.count_adjustments).to eq(2)
   end
   
   it "sums the prices of its promotions" do
-    order = build(:order_with_line_items_and_promotions)
+    order = build(:order_with_line_items_and_adjustments)
     
-    expect(order.total_promotions).to eq(BigDecimal.new('10'))
+    expect(order.total_adjustments).to eq(BigDecimal.new('10'))
   end
   
   it "gets the difference between its line items and promotions" do
-    order = build(:order_with_line_items_and_promotions)
+    order = build(:order_with_line_items_and_adjustments)
     
     expect(order.total).to eq(BigDecimal.new('90'))
   end

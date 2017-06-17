@@ -6,6 +6,12 @@ FactoryGirl.define do
     price BigDecimal("10")
   end
   
+  factory :adjustment do
+    sequence(:label) { |i| "label_#{i}" }
+    amount BigDecimal("5")
+    quantity 1
+  end
+  
   factory :customer do
     sequence(:email) { |i| "example_#{i}@domain.com" }
   end
@@ -22,14 +28,15 @@ FactoryGirl.define do
         order.line_items = build_list(:line_item, evaluator.line_items_count, order: order, quantity: 2)
       end
       
-      factory :order_with_line_items_and_promotions do
+      factory :order_with_line_items_and_adjustments do
         
         transient do
-          promotions_count 2
+          adjustments_count 2
         end
         
         after(:build) do |order, evaluator|
-          order.promotions = build_list(:promotion, evaluator.promotions_count, order: order)
+          order.adjustments << { description: 'Something Cool', amount: BigDecimal("5") }
+          order.adjustments << { description: 'Adjustment Again', amount: BigDecimal("5") }
         end
       end
     end
