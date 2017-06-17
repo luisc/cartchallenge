@@ -6,7 +6,6 @@ FactoryGirl.define do
   
   factory :customer do
     sequence(:email) { |i| "example_#{i}@domain.com" }
-    # association :order, strategy: :build
   end
   
   factory :order do
