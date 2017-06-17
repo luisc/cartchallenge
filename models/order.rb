@@ -27,6 +27,14 @@ class Order
     
   end
   
+  def add_adjustment(adjustment)
+    self.adjustments << adjustment
+  end
+  
+  def add_adjustments(adjustments)
+    self.adjustments = adjustments
+  end
+  
   def total
     total_line_items - total_adjustments
   end
@@ -39,7 +47,7 @@ class Order
   
   def total_adjustments
     self.adjustments.inject(0) do |result, adjustment|
-      result + adjustment[:amount]
+      result + adjustment.amount
     end
   end
   
