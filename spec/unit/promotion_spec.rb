@@ -27,13 +27,13 @@ RSpec.describe Promotion do
   it "defaults to applying for each match" do
     promotion = Promotion.new
     
-    expect(promotion.repeat_application).to eq true
+    expect(promotion.apply_amount_for_each_match).to eq true
   end
   
   it "can set a flag to apply it for each match" do
-    promotion = Promotion.new(repeat_application: false)
+    promotion = Promotion.new(apply_amount_for_each_match: false)
     
-    expect(promotion.repeat_application).to eq false
+    expect(promotion.apply_amount_for_each_match).to eq false
   end
   
   context "applies a" do

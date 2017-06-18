@@ -3,12 +3,12 @@ class Promotion
   attr_accessor :qualifiers
   attr_accessor :effects
   attr_accessor :results
-  attr_accessor :repeat_application
+  attr_accessor :apply_amount_for_each_match
   
   def initialize(attrs = {})
     self.qualifiers = {}
     self.effects = {}
-    self.repeat_application = attrs[:repeat_application].nil? ? true : attrs[:repeat_application]
+    self.apply_amount_for_each_match = attrs[:apply_amount_for_each_match].nil? ? true : attrs[:apply_amount_for_each_match]
   end
   
   def add_qualifier(item, quantity)
