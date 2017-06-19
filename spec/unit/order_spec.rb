@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Order do
   
-  it "sums the prices of its line items" do
+  it "sums the prices of its line items", focus: true do
     order = build(:order_with_line_items)
     
     expect(order.total_line_items).to eq(BigDecimal.new('100'))

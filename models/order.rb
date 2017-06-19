@@ -44,8 +44,8 @@ class Order
   end
   
   def total_line_items
-    self.line_items.inject(0) do |result, line_item|
-      result + line_item.subtotal
+    self.line_items.keys.inject(0) do |result, key|
+      result + line_items[key].subtotal
     end
   end
   
@@ -64,8 +64,8 @@ class Order
   end
   
   def count_all_line_items
-    line_items.inject(0) do |result, line_item|
-      result + line_item.quantity
+    line_items.keys.inject(0) do |result, key|
+      result + line_items[key].quantity
     end
   end
   
