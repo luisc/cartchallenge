@@ -22,10 +22,16 @@ FactoryGirl.define do
     factory :order_with_line_items do
       transient do
         line_items_count 5
+        default_quantity 2
       end
       
       after(:build) do |order, evaluator|
-        order.line_items = build_list(:line_item, evaluator.line_items_count, order: order, quantity: 2)
+        evaluator.line_items_count.times do
+          item = build(:item)
+          evaluator.default_quantity.times do
+            order.add_line_item(item)
+          end
+        end
       end
       
       factory :order_with_line_items_and_adjustments do
@@ -54,7 +60,7 @@ FactoryGirl.define do
   end
   
   factory :line_item do
-    association :order, strategy: :build
+    # association :order, strategy: :build
     
     after(:build) do |line_item, evaluator|
       item = build(:item)
