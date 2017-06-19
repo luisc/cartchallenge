@@ -18,8 +18,8 @@ RSpec.describe Promotion do
     item_2 = build(:item)
 
     promotion = Promotion.new
-    promotion.add_effect("Some label") { BigDecimal("20") }
-    promotion.add_effect("Another label") { BigDecimal("10") }
+    promotion.add_effect("Some label", BigDecimal("20"))
+    promotion.add_effect("Another label", BigDecimal("10"))
 
     expect(promotion.effects.length).to eq(2)
   end
@@ -28,7 +28,7 @@ RSpec.describe Promotion do
     item_1 = build(:item)
 
     promotion = Promotion.new
-    promotion.add_effect(item_1) { item_1.price }
+    promotion.add_effect(item_1, item_1.price)
 
     expect(promotion.effects.first[:amount]).to eq item_1.price
   end
@@ -45,39 +45,96 @@ RSpec.describe Promotion do
     expect(promotion.apply_amount_for_each_match).to eq false
   end
   
-  context "checks qualifiers" do
+  context "processes" do
     
-    it "for a valid three for one deal" do
-      
+    it "a valid three for one deal" do
       order = build(:order_with_line_items, line_items_count: 1, default_quantity: 4)
       item = order.line_items[order.line_items.first.first].item
       
       promotion = Promotion.new
       promotion.add_qualifier(item, 4)
-      promotion.add_effect("Buy 3, Get 1 Free") { item.price }
+      promotion.add_effect("Buy 3, Get 1 Free", item.price)
       
-      expect(promotion.qualifies?(order.line_items)).to eq true
+      promotion.process_order(order.line_items)
+      
+      expect(promotion.total).to eq item.price
     end
     
-    it "for an invalid three for one deal" do
+    it "an invalid three for one deal" do
       order = build(:order_with_line_items, line_items_count: 1, default_quantity: 3)
       item = order.line_items[order.line_items.first.first].item
       
       promotion = Promotion.new
       promotion.add_qualifier(item, 4)
-      promotion.add_effect("Buy 3, Get 1 Free") { item.price }
+      promotion.add_effect("Buy 3, Get 1 Free", item.price)
       
-      expect(promotion.qualifies?(order.line_items)).to eq false
+      promotion.process_order(order.line_items)
+      
+      expect(promotion.total).to eq 0
     end
     
-    
-  end
-  
-  context "applies a" do
-    
-    it "three for one deal" do
+    it "for a valid buy one get another free deal" do
       
-      # expect(true).to eq false
+      order = build(:order_with_line_items, line_items_count: 2, default_quantity: 1)
+      
+      promotion = Promotion.new
+      item = nil
+      order.line_items.keys.each do |key|
+        item = order.line_items[key].item
+        promotion.add_qualifier(item, 1)
+      end
+      
+      promotion.add_effect("Buy 1, Get Another Free", item.price)
+      promotion.process_order(order.line_items)
+      
+      expect(promotion.total).to eq item.price
+    end
+    
+    it "for an invalid valid buy one get another free deal" do
+      
+      order = build(:order_with_line_items, line_items_count: 2, default_quantity: 1)
+      
+      item_1 = build(:item)
+      item_2 = build(:item)
+      
+      promotion = Promotion.new
+      promotion.add_qualifier(item_1, 1)
+      promotion.add_qualifier(item_2, 1)
+      promotion.add_effect("Buy 1, Get Another Free", item_2.price)
+      
+      promotion.process_order(order.line_items)
+      
+      expect(promotion.total).to eq 0
+    end
+    
+    it "checks for a valid bulk discount" do
+      order = build(:order_with_line_items, line_items_count: 1, default_quantity: 4)
+      line_item = order.line_items[order.line_items.first.first]
+      item = line_item.item
+      
+      promotion = Promotion.new(apply_amount_for_each_match: false)
+      promotion.add_qualifier(item, 4)
+      total = line_item.quantity * (item.price - 20)
+      promotion.add_effect("Buy 4, Get Each $20 off", total)
+      
+      promotion.process_order(order.line_items)
+      
+      expect(promotion.total).to eq total
+    end
+    
+    it "checks for an invalid bulk discount" do
+      order = build(:order_with_line_items, line_items_count: 1, default_quantity: 3)
+      line_item = order.line_items[order.line_items.first.first]
+      item = line_item.item
+      
+      promotion = Promotion.new(apply_amount_for_each_match: false)
+      promotion.add_qualifier(item, 4)
+      total = line_item.quantity * (item.price - 20)
+      promotion.add_effect("Buy 4, Get Each $20 off", total)
+      
+      promotion.process_order(order.line_items)
+      
+      expect(promotion.total).to eq 0
     end
     
   end
