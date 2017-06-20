@@ -4,8 +4,14 @@ class Adjustment
   attr_accessor :amount
   attr_accessor :quantity
   
+  def initialize(attrs = {})
+    self.label = attrs[:label]
+    self.amount = attrs[:amount]
+    self.quantity = attrs[:quantity]
+  end
+  
   def subtotal
-    amount * quantity
+    self.amount * self.quantity
   end
   
 end

@@ -26,6 +26,7 @@ class Promotion
   def process_order(line_items)
     found = true
     matches = []
+    self.results = []
     
     self.qualifiers.keys.each do |item|
       li = line_items[item.id]
@@ -35,7 +36,6 @@ class Promotion
         matches << (self.apply_amount_for_each_match ? li.quantity / self.qualifiers[item] : 1)
       else
         found = false
-        break
       end
       
     end
@@ -43,16 +43,16 @@ class Promotion
     if found
       min = matches.min
       self.effects.each do |effect|
-        self.results << effect.merge(quantity: min)
+        self.results << Adjustment.new(label: effect[:label], amount: effect[:amount], quantity: min)
       end
     end
     
-    found
+    results
   end
   
   def total
-    self.results.inject(0) do |total, row|
-      total + (row[:amount] * row[:quantity])
+    self.results.inject(0) do |total, adjustment|
+      total + (adjustment.amount * adjustment.quantity)
     end
   end
   

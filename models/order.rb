@@ -32,7 +32,9 @@ class Order
   end
   
   def add_adjustments(adjustments)
-    self.adjustments = adjustments
+    adjustments.each do |a|
+      self.adjustments << a
+    end
   end
   
   def add_promotion(promotion)
@@ -67,6 +69,34 @@ class Order
     line_items.keys.inject(0) do |result, key|
       result + line_items[key].quantity
     end
+  end
+  
+  def print_total
+    output = header
+    output += "\nItems\n"
+    self.line_items.keys.each do |key|
+      output += "#{line_items[key].quantity} | "
+      output += "#{line_items[key].item.name} | "
+      output += "#{line_items[key].subtotal}\n"
+    end
+    
+    if adjustments.length > 0
+      output += "\nDiscounts\n"
+      self.adjustments.each do |adjustment|
+        output += "#{adjustment.quantity} | "
+        output += "#{adjustment.label} | "
+        output += "#{adjustment.subtotal}\n"
+      end
+      output += "\nTotal Discounts: #{total_adjustments}"
+    end
+    
+    output += "\nOrder Total: #{total}\n"
+    
+    output
+  end
+  
+  def header
+    "Quantity | Item Name | Subtotal\n"
   end
   
 end

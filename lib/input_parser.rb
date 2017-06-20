@@ -9,7 +9,10 @@ class InputParser
         order = Order.new
         elements = line.chomp.split("\t")
         order.customer = Customer.find(elements.first.to_i)
-        order.line_items = elements[1..-1]
+        elements[1..-1].each do |e|
+          order.add_line_item(Item.find(e))
+        end
+        
         orders << order
       end
       
@@ -30,6 +33,23 @@ class InputParser
       end
       
       customers
+    end
+    
+    def items_file(file)
+      items = {}
+      
+      File.open(file).each do |line|
+        item = Item.new
+        elements = line.chomp.split("\t")
+        
+        item.id = elements.first
+        item.name = elements[1]
+        item.price = BigDecimal(elements[2].sub('$', ''))
+        
+        items[item.id] = item
+      end
+      
+      items
     end
     
     def data_dir

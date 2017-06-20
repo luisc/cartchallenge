@@ -6,12 +6,6 @@ class Customer
   
   @@customers = []
   
-  
-  # def initialize(attributes = {})
-  #   self.order = attributes[:order] if attributes[:order]
-  #   self.email = attributes[:email]
-  # end
-  
   def self.find(id)
     if @@customers.empty?
       @@customers = InputParser.customers_file(InputParser.data_dir + 'customers')
